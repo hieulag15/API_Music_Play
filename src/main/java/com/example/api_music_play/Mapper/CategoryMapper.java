@@ -21,5 +21,4 @@ public interface CategoryMapper {
 
     @IterableMapping(elementTargetType = CategoryDTO.class, qualifiedByName = "CategoryDTO")
     List<CategoryDTO> getListCategory(List<Category> categories);
-
 }
