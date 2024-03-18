@@ -8,11 +8,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CloudinaryConfig {
 
-    private String cloudName = "duq7r7iuo";
+    private String cloudName = "dultx7bn7";
 
-    private String apiKey = "338818468669422";
+    private String apiKey = "952985858398759";
 
-    private String apiSecret = "eyvS9ai5yFRbXioc6MhRnMF-y4I";
+    private String apiSecret = "XqyaWI96_FeUd26ObVJqnL1Ngns";
 
     @Bean
     public Cloudinary cloudinary() {
