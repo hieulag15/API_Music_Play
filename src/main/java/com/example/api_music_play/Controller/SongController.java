@@ -87,6 +87,7 @@ public class SongController {
         return songMessage;
     }
 
+    @PostMapping(value = "/delete")
     public SongMessage deleteSong(@RequestParam Long id) {
         SongMessage songMessage = new SongMessage();
 
