@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Mapper(componentModel = "srping")
+@Mapper(componentModel = "spring")
 @Component
 public interface CategoryMapper {
 

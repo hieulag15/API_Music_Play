@@ -19,7 +19,7 @@ public interface UserMapper {
     @Mapping(source = "first_name", target = "first_name")
     @Mapping(source = "last_name", target = "last_name")
     @Mapping(source = "email", target = "email")
-    @Mapping(source = "passsword", target = "password")
+    @Mapping(source = "password", target = "password")
     @Mapping(source = "role", target = "role")
     @BeanMapping(ignoreByDefault = true)
     @Named("UserDTO")

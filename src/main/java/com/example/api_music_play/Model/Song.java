@@ -35,7 +35,7 @@ public class Song {
     @ManyToOne
     private Category category;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "song", cascade = CascadeType.ALL)
     private List<Favourite> favourites;
 
 }
