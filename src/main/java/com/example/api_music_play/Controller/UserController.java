@@ -70,6 +70,7 @@ public class UserController {
         return userMessage;
     }
 
+    @PostMapping(value = "/delete")
     public UserMessage deleteUser(@RequestParam long id){
         UserMessage userMessage = new UserMessage();
         User user = userRepository.findById(id).orElseThrow(()-> new RourceNotFoundException("User not exist with id: " + id));
@@ -81,6 +82,25 @@ public class UserController {
         else {
             userMessage.setMessage("Failed");
             return userMessage;
+        }
+    }
+
+    @PostMapping(value = "/login")
+    public UserMessage login(@RequestParam String phone, @RequestParam String password){
+        System.out.println(phone);
+        User user = userRepository.Login(phone, password);
+        UserDTO userDTO = userMapper.getListUser(user);
+        UserMessage userLogin = new UserMessage();
+        if(user != null)
+        {
+            userLogin.setMessage("Login is successful!");
+            userLogin.setUserDTO(userDTO);
+            return userLogin;
+        }
+        else {
+            userLogin.setMessage("Login is failed!");
+            userLogin.setUserDTO(null);
+            return userLogin;
         }
     }
 
