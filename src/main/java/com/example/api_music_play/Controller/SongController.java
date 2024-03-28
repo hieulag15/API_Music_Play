@@ -81,6 +81,7 @@ public class SongController {
             SongDTO songDTO = songMapper.getListSong(song);
             songMessage.setSong(songDTO);
             songMessage.setMessage("You have successfully created song");
+            songRepository.save(song);
         } catch (Exception e) {
             songMessage.setMessage("You have failed created a song");
         }
@@ -103,7 +104,7 @@ public class SongController {
         String urlImage = song.getImage();
         String[] partsImage = urlSong.split("/");
         String lastPartImage = partsImage[partsImage.length - 1];
-        String publicIdImage = lastPartImage.substring(0, lastPartSong.lastIndexOf("."));
+        String publicIdImage = lastPartImage.substring(0, lastPartImage.lastIndexOf("."));
 
         try {
             Map resultSong = cloudinary.uploader().destroy(publicIdSong, ObjectUtils.asMap("resource_type", "video"));
