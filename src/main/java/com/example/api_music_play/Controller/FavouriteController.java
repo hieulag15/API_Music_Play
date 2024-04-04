@@ -11,6 +11,7 @@ import com.example.api_music_play.Repository.FavouriteRepository;
 import com.example.api_music_play.Repository.SongRepository;
 import com.example.api_music_play.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,13 +40,13 @@ public class FavouriteController {
         Favourite favourite;
         FavouriteDTO favouriteDTO = new FavouriteDTO();
         FavouriteMessage favouriteMessage = new FavouriteMessage();
-
         favourite = favouriteRepository.findFavourite(songId, userId);
-        if (favourite != null) {
+        if(favourite != null){
             favouriteDTO = favouriteMapper.getListFavourite(favourite);
             favouriteMessage.setFavouriteDTO(favouriteDTO);
-            favouriteMessage.setMessage("Successfull");
-        } else {
+            favouriteMessage.setMessage("Successful");
+        }
+        else {
             favouriteMessage.setMessage("Failed");
         }
         return favouriteMessage;
@@ -53,16 +54,16 @@ public class FavouriteController {
 
     @PostMapping(value = "/listByUser")
     public FavouriteMessage listByUser(@RequestParam Long userId) {
-        List<Favourite> favourites;
-        List<FavouriteDTO> favouriteDTOS;
+        List<Favourite> favourite;
+        List<FavouriteDTO>  favouriteDTOs ;
         FavouriteMessage favouriteMessage = new FavouriteMessage();
-
-        favourites = favouriteRepository.findByUser(userId);
-        if (favourites != null) {
-            favouriteDTOS = favouriteMapper.getListFavourite(favourites);
-            favouriteMessage.setFavouriteDTOS(favouriteDTOS);
-            favouriteMessage.setMessage("Successfull");
-        } else {
+        favourite = favouriteRepository.findByUser(userId);
+        if(favourite != null){
+            favouriteDTOs = favouriteMapper.getListFavourite(favourite);
+            favouriteMessage.setFavouriteDTOS(favouriteDTOs);
+            favouriteMessage.setMessage("Successful");
+        }
+        else {
             favouriteMessage.setMessage("Failed");
         }
         return favouriteMessage;
@@ -70,23 +71,27 @@ public class FavouriteController {
 
     @PostMapping(value = "/add")
     public FavouriteMessage addFavourite(@RequestParam Long songId, @RequestParam Long userId) {
-        Song song = songRepository.findById(songId).orElseThrow(()-> new RourceNotFoundException("Song not exist with id: " + songId));
-        User user = userRepository.findById(userId).orElseThrow(()-> new RourceNotFoundException("User not exist with id: " + userId));
-        FavouriteMessage favouriteMessage = new FavouriteMessage();
-        FavouriteDTO favouriteDTO = new FavouriteDTO();
+        Song song = songRepository.findById(songId).
+                orElseThrow(()-> new ResourceNotFoundException("Song not exist with id" + songId));
+        User user = userRepository.findById(userId).
+                orElseThrow(()-> new ResourceNotFoundException("User not exist with id" + userId));
         Favourite favourite = new Favourite();
         favourite.setSong(song);
         favourite.setUser(user);
-
-        if (song != null && user != null) {
-            favouriteRepository.save(favourite);
-            favouriteDTO = favouriteMapper.getListFavourite(favourite);
-            favouriteMessage.setFavouriteDTO(favouriteDTO);
-            favouriteMessage.setMessage("Successfull");
-        } else {
+        FavouriteMessage favouriteMessage = new FavouriteMessage();
+        try{
+            if(song!= null && user!= null) {
+                favouriteRepository.save(favourite);
+                FavouriteDTO favouriteDTO = favouriteMapper.getListFavourite(favourite);
+                favouriteMessage.setMessage("Successful");
+                favouriteMessage.setFavouriteDTO(favouriteDTO);
+            }
+        }
+        catch (Exception e)
+        {
             favouriteMessage.setMessage("Failed");
         }
-        return favouriteMessage;
+        return  favouriteMessage;
     }
 
     @PostMapping(value = "/delete")
@@ -94,12 +99,12 @@ public class FavouriteController {
         Favourite favourite;
         FavouriteDTO favouriteDTO = new FavouriteDTO();
         FavouriteMessage favouriteMessage = new FavouriteMessage();
-
         favourite = favouriteRepository.findFavourite(songId, userId);
-        if(favourite != null) {
+        if(favourite != null){
             favouriteRepository.delete(favourite);
-            favouriteMessage.setMessage("Successfull");
-        } else {
+            favouriteMessage.setMessage("Successful");
+        }
+        else {
             favouriteMessage.setMessage("Failed");
         }
         return favouriteMessage;

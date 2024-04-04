@@ -7,6 +7,7 @@ import com.example.api_music_play.ModelDTO.UserDTO;
 import com.example.api_music_play.ModelMessage.UserMessage;
 import com.example.api_music_play.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,13 +26,14 @@ public class UserController {
         List<UserDTO> userDTOS = userMapper.getListUser(userRepository.findAll());
         UserMessage userMessage = new UserMessage();
         userMessage.setUserDTOS(userDTOS);
-        userMessage.setMessage("sucsesfull");
+        userMessage.setMessage("Successful");
         return userMessage;
     }
 
     @GetMapping(value = "/getUserById/{id}")
     public UserMessage getUserById(@PathVariable long id){
-        User user = userRepository.findById(id).orElseThrow(()-> new RourceNotFoundException("User not exist with id:" + id));
+        User user = userRepository.findById(id).
+                orElseThrow(()-> new ResourceNotFoundException("User not exist with id" + id));
         UserDTO userDTO = userMapper.getListUser(user);
         UserMessage userMessage = new UserMessage();
         userMessage.setUserDTO(userDTO);
@@ -45,11 +47,12 @@ public class UserController {
         try {
             UserDTO userDTO = userMapper.getListUser(userRepository.save(user));
             userMessage.setUserDTO(userDTO);
-            userMessage.setMessage("You have successfull created a user account!");
-            return userMessage;
-        } catch (Exception e)
+            userMessage.setMessage("You have successfully created a user account!");
+            return  userMessage;
+        }
+        catch (Exception e)
         {
-            userMessage.setUserDTOS(null);
+            userMessage.setUserDTO(null);
             userMessage.setMessage("You have failed to create a user account!");
             return userMessage;
         }
@@ -57,26 +60,27 @@ public class UserController {
 
     @PutMapping(value = "/update/{id}")
     public UserMessage updateUserById(@PathVariable long id, @RequestBody User user){
-        User updateUser = userRepository.findById(id).orElseThrow(()-> new RourceNotFoundException("User not exist with id: " + id));
+        User updateUser = userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Song not exist with id" + id));;
         updateUser.setFirst_name(user.getFirst_name());
         updateUser.setLast_name(user.getLast_name());
         updateUser.setPassword(user.getPassword());
         updateUser.setEmail(user.getEmail());
         userRepository.save(updateUser);
-        UserDTO userDTO = userMapper.getListUser(updateUser);
+        UserDTO userDTO = userMapper.getListUser(user);
         UserMessage userMessage = new UserMessage();
         userMessage.setUserDTO(userDTO);
-        userMessage.setMessage("Successfull");
+        userMessage.setMessage("Successful");
         return userMessage;
     }
 
     @PostMapping(value = "/delete")
     public UserMessage deleteUser(@RequestParam long id){
         UserMessage userMessage = new UserMessage();
-        User user = userRepository.findById(id).orElseThrow(()-> new RourceNotFoundException("User not exist with id: " + id));
-        if (user != null) {
+        User user = userRepository.findById(id).
+                orElseThrow(()-> new ResourceNotFoundException("Song not exist with id" + id));
+        if(user != null)
+        {
             userRepository.delete(user);
-            userMessage.setMessage("Successfull");
             return userMessage;
         }
         else {
@@ -87,7 +91,6 @@ public class UserController {
 
     @PostMapping(value = "/login")
     public UserMessage login(@RequestParam String phone, @RequestParam String password){
-        System.out.println(phone);
         User user = userRepository.Login(phone, password);
         UserDTO userDTO = userMapper.getListUser(user);
         UserMessage userLogin = new UserMessage();

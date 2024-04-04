@@ -9,6 +9,7 @@ import com.example.api_music_play.ModelDTO.CategoryDTO;
 import com.example.api_music_play.ModelMessage.CategoryMessage;
 import com.example.api_music_play.Repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,29 +41,32 @@ public class CategoryController {
 
     @PutMapping(value = "/update/{id}")
     public CategoryMessage update(@PathVariable long id, @RequestBody Category category){
-        CategoryMessage categoryMessage = new CategoryMessage();
-        Category categoryUpdate = categoryRepository.findById(id).orElseThrow(()-> new RourceNotFoundException("Category not exist with id: " + id));
+        CategoryMessage categoryMessage= new CategoryMessage();
+        Category categoryUpdate = categoryRepository.findById(id).
+                orElseThrow(()-> new ResourceNotFoundException("Song not exist with id" + id));
         categoryUpdate.setName(category.getName());
         categoryUpdate.setDescription(category.getDescription());
         categoryRepository.save(categoryUpdate);
         categoryMessage.setCategory(categoryUpdate);
-        categoryMessage.setMessage("Successfull");
+        categoryMessage.setMessage("Successfully");
         return categoryMessage;
     }
 
     @PostMapping(value = "/delete")
     public CategoryMessage delete(@RequestParam Long id){
         CategoryMessage categoryMessage = new CategoryMessage();
-        Category category = categoryRepository.findById(id).orElseThrow(()-> new RourceNotFoundException("Category not exist with id: " + id));
-        if (category != null) {
+        Category category = categoryRepository.findById(id).
+                orElseThrow(()-> new ResourceNotFoundException("Song not exist with id" + id));
+        if(category != null)
+        {
             categoryRepository.delete(category);
-            categoryMessage.setMessage("Successfull");
-            return categoryMessage;
-        } else {
-            categoryMessage.setMessage("Failde");
+            categoryMessage.setMessage("Successfully");
             return categoryMessage;
         }
-
+        else {
+            categoryMessage.setMessage("Failed");
+            return categoryMessage;
+        }
     }
 
     @PostMapping(value = "/create")
@@ -74,10 +78,10 @@ public class CategoryController {
         try {
             Map<String, Object> uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.asMap("resource_type", "auto"));
             linkImage = uploadResult.get("secure_url").toString();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         category.setName(name);
         category.setImage(linkImage);
         category.setDescription(description);
@@ -85,11 +89,12 @@ public class CategoryController {
         try {
             categoryRepository.save(category);
             categoryMessage.setCategory(category);
-            categoryMessage.setMessage("You have successfull created a Category");
+            categoryMessage.setMessage("You have successfully created a category!");
+            System.out.println(categoryMessage.getCategory().getName());
             return categoryMessage;
         } catch (Exception e) {
             categoryMessage.setCategory(null);
-            categoryMessage.setMessage("You have failed to create a Category");
+            categoryMessage.setMessage("You have failed to create a category");
             return categoryMessage;
         }
     }
