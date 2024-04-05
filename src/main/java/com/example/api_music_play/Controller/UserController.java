@@ -33,7 +33,7 @@ public class UserController {
     @GetMapping(value = "/getUserById/{id}")
     public UserMessage getUserById(@PathVariable long id){
         User user = userRepository.findById(id).
-                orElseThrow(()-> new ResourceNotFoundException("User not exist with id" + id));
+                orElseThrow(()-> new RourceNotFoundException("User not exist with id" + id));
         UserDTO userDTO = userMapper.getListUser(user);
         UserMessage userMessage = new UserMessage();
         userMessage.setUserDTO(userDTO);
@@ -60,7 +60,7 @@ public class UserController {
 
     @PutMapping(value = "/update/{id}")
     public UserMessage updateUserById(@PathVariable long id, @RequestBody User user){
-        User updateUser = userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Song not exist with id" + id));;
+        User updateUser = userRepository.findById(id).orElseThrow(()-> new RourceNotFoundException("Song not exist with id" + id));;
         updateUser.setFirst_name(user.getFirst_name());
         updateUser.setLast_name(user.getLast_name());
         updateUser.setPassword(user.getPassword());
@@ -77,7 +77,7 @@ public class UserController {
     public UserMessage deleteUser(@RequestParam long id){
         UserMessage userMessage = new UserMessage();
         User user = userRepository.findById(id).
-                orElseThrow(()-> new ResourceNotFoundException("Song not exist with id" + id));
+                orElseThrow(()-> new RourceNotFoundException("Song not exist with id" + id));
         if(user != null)
         {
             userRepository.delete(user);

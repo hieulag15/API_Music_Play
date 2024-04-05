@@ -1,24 +1,23 @@
 package com.example.api_music_play.Model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
+@Table(name = "userr")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "phone", unique = true, nullable = false)
-    private String phone;
+    private  String phone;
 
     @Column(name = "first_name")
     private String first_name;
@@ -29,6 +28,7 @@ public class User {
     @Column(name = "email")
     private String email;
 
+
     @Column(name = "password")
     private String password;
 
@@ -37,4 +37,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Favourite> favourites;
+
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+//    private List<Favourite> favourites;
 }

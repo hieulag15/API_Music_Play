@@ -12,7 +12,6 @@ import com.example.api_music_play.ModelMessage.SongMessage;
 import com.example.api_music_play.Repository.CategoryRepository;
 import com.example.api_music_play.Repository.SongRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -95,7 +94,7 @@ public class SongController {
     @PostMapping(value = "/delete")
     public SongMessage deleteSong(@RequestParam Long id) {
         Song song = songRepository.findById(id).
-                orElseThrow(()-> new ResourceNotFoundException("Song not exist with id" + id));
+                orElseThrow(()-> new RourceNotFoundException("Song not exist with id" + id));
         //get public song
         String urlSong = song.getLink();
         String[] partsSong = urlSong.split("/");
@@ -157,7 +156,7 @@ public class SongController {
     }
 
     @PostMapping(value = "/getSongOfCategory")
-    public SongMessage getSongofCategory(@RequestParam long category_id) {
+    public SongMessage getSongofCategory(@RequestParam Long category_id) {
         List<Song> songs = songRepository.findByCategory(category_id);
         List<SongDTO> songDTOS = songMapper.getListSong(songs);
 
@@ -177,7 +176,7 @@ public class SongController {
     public SongMessage update(@RequestParam long id, @RequestBody SongUpdate song) {
         SongMessage songMessage= new SongMessage();
         Song songUpdate = songRepository.findById(id).
-                orElseThrow(()-> new ResourceNotFoundException("Song not exist with id" + id));
+                orElseThrow(()-> new RourceNotFoundException("Song not exist with id" + id));
         songUpdate.setName(song.getName());
         songUpdate.setSinger(song.getSinger());
         songUpdate.setAuthor(song.getAuthor());
